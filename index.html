@@ -45,51 +45,209 @@
             opacity: 0.9;
         }
         
-        .tabs {
-            display: flex;
+        /* Tab Navigation Wrapper */
+        .tab-nav-wrapper {
+            position: relative;
             background: #f8f9fa;
             border-bottom: 2px solid #e9ecef;
-            overflow-x: auto;
         }
-        
+
+        /* Gradient overlays to indicate scrollable content */
+        .tab-nav-wrapper::before,
+        .tab-nav-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 20px;
+            z-index: 2;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .tab-nav-wrapper::before {
+            left: 0;
+            background: linear-gradient(to right, rgba(248,249,250,1), rgba(248,249,250,0));
+            opacity: 0;
+        }
+
+        .tab-nav-wrapper::after {
+            right: 0;
+            background: linear-gradient(to left, rgba(248,249,250,1), rgba(248,249,250,0));
+        }
+
+        .tab-nav-wrapper.can-scroll-left::before {
+            opacity: 1;
+        }
+
+        .tab-nav-wrapper.can-scroll-right::after {
+            opacity: 1;
+        }
+
+        /* Scroll arrows for better mobile UX */
+        .scroll-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background: rgba(52, 152, 219, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            z-index: 3;
+            transition: all 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .scroll-arrow:hover {
+            background: rgba(52, 152, 219, 1);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .scroll-arrow.left {
+            left: 5px;
+        }
+
+        .scroll-arrow.right {
+            right: 5px;
+        }
+
+        .tab-nav-wrapper:hover .scroll-arrow.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .tabs {
+            display: flex;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding: 0 10px;
+        }
+
+        .tabs::-webkit-scrollbar {
+            display: none;
+        }
+
         .tab-button {
-            flex: 1;
-            min-width: 200px;
-            padding: 7px 15px;
+            flex-shrink: 0;
+            min-width: 180px;
+            padding: 12px 20px;
             background: transparent;
             border: none;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             color: #666;
             transition: all 0.3s ease;
             border-bottom: 3px solid transparent;
+            white-space: nowrap;
+            position: relative;
         }
-        
+
         .tab-button:hover {
             background: #e9ecef;
             color: #2c3e50;
         }
-        
+
         .tab-button.active {
             background: white;
             color: #2c3e50;
             border-bottom-color: #3498db;
         }
-        
-        .tab-content {
-            display: none;
-            padding: 20px;
-            animation: fadeIn 0.3s ease-in;
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .tab-button {
+                min-width: 160px;
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+
+            .tabs {
+                padding: 0 5px;
+            }
+
+            /* Show scroll indicators more prominently on mobile */
+            .tab-nav-wrapper::before,
+            .tab-nav-wrapper::after {
+                width: 15px;
+            }
+
+            /* Alternative: Show tab counter on mobile */
+            .tab-counter {
+                display: block;
+                position: absolute;
+                top: 5px;
+                right: 10px;
+                background: rgba(52, 152, 219, 0.9);
+                color: white;
+                padding: 2px 8px;
+                border-radius: 12px;
+                font-size: 0.75rem;
+                z-index: 4;
+            }
         }
-        
+
+        @media (min-width: 769px) {
+            .tab-counter {
+                display: none;
+            }
+        }
+
+        .tab-content {
+            padding: 2rem;
+            display: none;
+        }
+
         .tab-content.active {
             display: block;
         }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+
+        .tab-content h2 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        .tab-content p {
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        /* Alternative dropdown solution for mobile */
+        .mobile-tab-selector {
+            display: none;
+            width: 100%;
+            padding: 12px;
+            background: white;
+            border: 1px solid #e9ecef;
+            font-size: 1rem;
+            color: #2c3e50;
+            margin: 10px 0;
+        }
+
+        @media (max-width: 480px) {
+            .mobile-tab-selector {
+                display: block;
+            }
+            
+            .tab-nav-wrapper {
+                display: none;
+            }
         }
         
         .chapter-title {
@@ -106,7 +264,7 @@
             padding: 10px;
             border-radius: 12px;
             border-left: 5px solid #3498db;
-            border-bottom: 2px solid #3498db;
+            border-bottom: 1px solid #3498db;
         }
         
         .section h3 {
@@ -202,7 +360,7 @@
         
         .architecture-pattern {
             background: #e8f4f8;
-            border: 2px solid #3498db;
+            border: 0.5px solid #3498db;
             padding: 20px;
             border-radius: 10px;
             margin: 20px 0;
@@ -277,22 +435,46 @@
             <p>Key concepts and patterns for technical interviews</p>
         </div>
         
-        <div class="tabs">
-            <button class="tab-button active" onclick="showTab('chapter1')">1: Scale</button>
-            <button class="tab-button" onclick="showTab('chapter2')">2: Estimation</button>
-            <button class="tab-button" onclick="showTab('chapter3')">3: Framework</button>
-            <button class="tab-button" onclick="showTab('chapter4')">4: Rate Limiter</button>
-            <button class="tab-button" onclick="showTab('chapter5')">5: Consistent Hashing</button>
-            <button class="tab-button" onclick="showTab('chapter6')">6: Key-Value Store</button>
-            <button class="tab-button" onclick="showTab('chapter7')">7: Unique ID Generator</button>
-            <button class="tab-button" onclick="showTab('chapter8')">8: URL Shortener</button>
-            <button class="tab-button" onclick="showTab('chapter9')">9: Web Crawler</button>
-            <button class="tab-button" onclick="showTab('chapter10')">10: Notification System</button>
-            <button class="tab-button" onclick="showTab('chapter11')">11: Design a News Feed System</button>
-            <button class="tab-button" onclick="showTab('chapter12')">12: Design a Chat System</button>
-            <button class="tab-button" onclick="showTab('chapter13')">13: Design a Search Autocomplete System</button>
-            <button class="tab-button" onclick="showTab('chapter14')">14: Design YouTube</button>
-            <button class="tab-button" onclick="showTab('chapter15')">15: Design Google Drive</button>
+        <select class="mobile-tab-selector" onchange="showTab(this.value)">
+            <option value="chapter1">1: Scale</option>
+            <option value="chapter2">2: Estimation</option>
+            <option value="chapter3">3: Framework</option>
+            <option value="chapter4">4: Rate Limiter</option>
+            <option value="chapter5">5: Consistent Hashing</option>
+            <option value="chapter6">6: Key-Value Store</option>
+            <option value="chapter7">7: Unique ID Generator</option>
+            <option value="chapter8">8: URL Shortener</option>
+            <option value="chapter9">9: Web Crawler</option>
+            <option value="chapter10">10: Notification System</option>
+            <option value="chapter11">11: Design a News Feed System</option>
+            <option value="chapter12">12: Design a Chat System</option>
+            <option value="chapter13">13: Design a Search Autocomplete System</option>
+            <option value="chapter14">14: Design YouTube</option>
+            <option value="chapter15">15: Design Google Drive</option>
+        </select>
+
+        <div class="tab-nav-wrapper" id="tabNavWrapper">
+            <button class="scroll-arrow left" id="scrollLeft" onclick="scrollTabs('left')">‹</button>
+            <button class="scroll-arrow right" id="scrollRight" onclick="scrollTabs('right')">›</button>
+            <div class="tab-counter" id="tabCounter">1 / 15</div>
+            
+            <div class="tabs" id="tabsContainer">
+                <button class="tab-button active" onclick="showTab('chapter1')">1: Scale</button>
+                <button class="tab-button" onclick="showTab('chapter2')">2: Estimation</button>
+                <button class="tab-button" onclick="showTab('chapter3')">3: Framework</button>
+                <button class="tab-button" onclick="showTab('chapter4')">4: Rate Limiter</button>
+                <button class="tab-button" onclick="showTab('chapter5')">5: Consistent Hashing</button>
+                <button class="tab-button" onclick="showTab('chapter6')">6: Key-Value Store</button>
+                <button class="tab-button" onclick="showTab('chapter7')">7: Unique ID Generator</button>
+                <button class="tab-button" onclick="showTab('chapter8')">8: URL Shortener</button>
+                <button class="tab-button" onclick="showTab('chapter9')">9: Web Crawler</button>
+                <button class="tab-button" onclick="showTab('chapter10')">10: Notification System</button>
+                <button class="tab-button" onclick="showTab('chapter11')">11: Design a News Feed System</button>
+                <button class="tab-button" onclick="showTab('chapter12')">12: Design a Chat System</button>
+                <button class="tab-button" onclick="showTab('chapter13')">13: Design a Search Autocomplete System</button>
+                <button class="tab-button" onclick="showTab('chapter14')">14: Design YouTube</button>
+                <button class="tab-button" onclick="showTab('chapter15')">15: Design Google Drive</button>
+            </div>
         </div>
         
         <div id="chapter1" class="tab-content active">
@@ -3175,6 +3357,81 @@
             // Add active class to clicked button
             event.target.classList.add('active');
         }
+    </script>
+    <script>
+        let currentTab = 'chapter1';
+        const tabsContainer = document.getElementById('tabsContainer');
+        const tabNavWrapper = document.getElementById('tabNavWrapper');
+        const scrollLeftBtn = document.getElementById('scrollLeft');
+        const scrollRightBtn = document.getElementById('scrollRight');
+        const tabCounter = document.getElementById('tabCounter');
+
+        function showTab(tabId) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            // Remove active class from all tab buttons
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => button.classList.remove('active'));
+
+            // Show selected tab content
+            document.getElementById(tabId).classList.add('active');
+
+            // Add active class to selected tab button
+            const activeButton = document.querySelector(`[onclick="showTab('${tabId}')"]`);
+            if (activeButton) {
+                activeButton.classList.add('active');
+                // Scroll the active tab into view
+                activeButton.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
+
+            // Update mobile selector
+            const mobileSelector = document.querySelector('.mobile-tab-selector');
+            if (mobileSelector) {
+                mobileSelector.value = tabId;
+            }
+
+            currentTab = tabId;
+            updateTabCounter();
+            updateScrollButtons();
+        }
+
+        function scrollTabs(direction) {
+            const scrollAmount = 200;
+            if (direction === 'left') {
+                tabsContainer.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            } else {
+                tabsContainer.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            }
+        }
+
+        function updateScrollButtons() {
+            const canScrollLeft = tabsContainer.scrollLeft > 0;
+            const canScrollRight = tabsContainer.scrollLeft < (tabsContainer.scrollWidth - tabsContainer.clientWidth);
+
+            tabNavWrapper.classList.toggle('can-scroll-left', canScrollLeft);
+            tabNavWrapper.classList.toggle('can-scroll-right', canScrollRight);
+
+            scrollLeftBtn.classList.toggle('show', canScrollLeft);
+            scrollRightBtn.classList.toggle('show', canScrollRight);
+        }
+
+        function updateTabCounter() {
+            const activeIndex = Array.from(document.querySelectorAll('.tab-button')).findIndex(btn => btn.classList.contains('active')) + 1;
+            const totalTabs = document.querySelectorAll('.tab-button').length;
+            tabCounter.textContent = `${activeIndex} / ${totalTabs}`;
+        }
+
+        // Event listeners
+        tabsContainer.addEventListener('scroll', updateScrollButtons);
+
+        // Initialize
+        updateScrollButtons();
+        updateTabCounter();
+
+        // Handle window resize
+        window.addEventListener('resize', updateScrollButtons);
     </script>
 </body>
 </html>
